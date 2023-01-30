@@ -28,6 +28,9 @@ vars:
   #
   # SYMFONY
   SYMFONY_ENV: .env
+  SYMFONY: symfony
+  SYMFONY_CONSOLE: "{{.SYMFONY}} console"
+  SYMFONY_LINT: "{{.SYMFONY_CONSOLE}} lint:"
 ##
 ## === ✅ TASKS ========================================================
 ##
@@ -58,8 +61,114 @@ tasks:
       - curl -fsS {{.REPOSITORY}}/{{.ENV}}/Taskfile.yaml > ./_tpm/docker-compose/Taskfile.yaml
       - task: help
 
-  ## === ⚙️ INTERFACES ================================================
+  ## === 🎛️  SYMFONY ===============================================
 
-  ## === 🧰 TOOLS =====================================================
+  start:
+    desc: "Start symfony server"
+    cmds:
+      - "{{.SYMFONY}} serve -d"
 
-  ## === 🧪 TESTING ===================================================
+  start-no-ssl:
+    desc: "Start symfony server"
+    cmds:
+      - "{{.SYMFONY}} serve --no-tls -d"
+
+  stop:
+    desc: "Stop symfony server"
+    cmds:
+      - "{{.SYMFONY}} server:stop"
+
+  cc:
+    desc: "Clear symfony cache"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} cache:clear"
+
+  log:
+    desc: "Display symfony logs"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} server:log"
+
+  ddc:
+    desc: "Create symfony database"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} doctrine:database:create --if-not-exists"
+
+  ddd:
+    desc: "Drop symfony database"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} doctrine:database:drop --if-exists --force"
+
+  dsu:
+    desc: "Update symfony schema database"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} doctrine:schema:update --force"
+
+  mm:
+    desc: "Make symfony migration"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} make:migration"
+
+  dmm:
+    desc: "Migrate"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} doctrine:migrations:migrate --no-interaction"
+
+  dfl:
+    desc: "Load fixtures"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} doctrine:fixtures:load --no-interaction"
+
+  me:
+    desc: "Make entity"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} make:entity"
+
+  mc:
+    desc: "Make controller"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} make:controller"
+
+  mf:
+    desc: "Make form"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} make:form"
+
+  perm:
+    desc: "Fix permissions"
+    cmds:
+      - "chmod -R 777 var"
+
+  sudo-perm:
+    desc: "Fix permissions with sudo"
+    cmds:
+      - "sudo chmod -R 777 var"
+
+  dump-env:
+    desc: "Dump env"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} debug:dotenv"
+
+  dump-env-container:
+    desc: "Dump env container"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} debug:container --env-vars"
+
+  dump-router:
+    desc: "Dump routes"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} debug:router"
+
+  debug:
+    desc: "Debug Systeme"
+    cmds:
+      - "{{.SYMFONY_CONSOLE}} local:php:list"
+
+  open:
+    desc: "Open symfony server"
+    cmds:
+      - "{{.SYMFONY}} open:local"
+
+  check-requirements:
+    desc: "Check symfony requirements"
+    cmds:
+      - "{{.SYMFONY}} check:requirements"
